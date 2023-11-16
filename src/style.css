@@ -1,0 +1,109 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #22303c;
+    color: white;
+    font-size: 2.5rem;
+    padding: 15px 20px;
+    border-bottom: 3px solid green;
+}
+
+.menu {
+    cursor: pointer;
+}
+
+.icon {
+    width: 2rem;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20vw, 1fr));
+    min-height: 85vh;
+    min-width: 100vw;
+}
+
+
+.content .left {
+    background-color: #15202b;
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    color: white
+}
+
+.home {
+    padding: 30px 20px 0px 20px;
+}
+
+.home h2 {
+    border-bottom: 3px solid white;
+}
+
+.home .line {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    padding: 10px 30px;
+    margin: 20px 0;
+    gap: 10px;
+}
+
+.home .line:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+}
+
+.home .line::after{
+    background-color: rgba(31, 141, 77, 0.5);
+    border-left: 3px solid green;
+    
+}
+
+.home .line .icon {
+    width: 2rem;
+}
+
+.project {
+    padding: 10px 20px;
+}
+
+.project h2 {
+    border-bottom: 3px solid white;
+}
+
+.hidden {
+    display: none;
+}
+
+.content .right {
+    background: #192734;
+    grid-column: 2 / 6;
+    grid-row: 1 / 2;
+    flex-grow: 1;
+    color: white;
+}
+
+.right h2 {
+    margin: 2rem 3rem;
+    padding: 30px;
+    font-size: 2rem;
+    background-color: rgba(31, 141, 77, 1);
+    border-radius: 0.5rem;
+}
+
+.footer {
+    background: #22303c;
+    padding: 0.95rem;
+    bottom: 0;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
