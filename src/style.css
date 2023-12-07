@@ -60,23 +60,102 @@
     cursor: pointer;
 }
 
-.home .line::after{
+.home .line.active{
     background-color: rgba(31, 141, 77, 0.5);
     border-left: 3px solid green;
-    
 }
 
 .home .line .icon {
     width: 2rem;
 }
 
-.project {
-    padding: 10px 20px;
+.body {
+    padding: 60px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid white;
+    color: black;
 }
 
-.project h2 {
-    border-bottom: 3px solid white;
+.wrapper {
+    background: #22303c;
 }
+
+.wrapper header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 15px 25px;
+    background: rgba(31, 141, 77, 0.75);
+    color: white;
+}
+
+header p {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+header .icons span {
+    height: 38px;
+    width: 38px;
+    margin: 0 1px;
+    text-align: center;
+    cursor: pointer;
+    line-height: 38px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.3rem;
+}
+
+header .icons span:hover{
+    background: #f2f2f2;
+}
+
+header .icons span:last-child{
+    margin-right: -10px;
+}
+
+.calender {
+    padding-top: 5px;
+    text-align: center;
+    color: white;
+}
+
+.calender ul {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.calender .days {
+    margin-bottom: 20px;
+}
+
+.calender .weeks li{
+    font-weight: 550;
+}
+
+.calender .days li{
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.calender ul li{
+    position: relative;
+    width: calc(100%/7);
+}
+
+.days li.inactive{
+    color: #aaa;
+}
+
+.days li.active{
+    background: rgba(31, 141, 77, 1);
+    color: white
+}
+
 
 .hidden {
     display: none;
@@ -92,10 +171,181 @@
 
 .right h2 {
     margin: 2rem 3rem;
-    padding: 30px;
-    font-size: 2rem;
+    padding: 15px;
+    font-size: 1.5rem;
     background-color: rgba(31, 141, 77, 1);
     border-radius: 0.5rem;
+}
+
+.right #panel {
+    display: grid;
+    grid-template-columns: 40vw 40vw;
+    height: 80vh;
+}
+
+.right #panel #left-panel {
+    border-right: 3px solid white;
+}
+
+.right #panel form {
+    margin: 0 3rem;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: #15202b;
+    gap: 5px;
+    font-size: 1rem;
+}
+
+.right #panel form.hidden {
+    display: none;
+}
+
+.right #panel form #button {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.right #panel form #button input[type=submit]{
+    padding: 5px 20px;
+    background:rgba(31, 141, 77, 1);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.right #panel form #button input[type=button]{
+    padding: 5px 20px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.right .add button {
+    background-color: #192734;
+    color: white;
+    border: none;
+    display: flex;
+    justify-content: flex-start;
+    text-align: center;
+    margin: 2rem 3rem;
+    padding: 5px;
+    gap: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    width: 33vw;
+}
+
+.right .add button:hover {
+    background-color: #15202b ; 
+}
+
+.right .add button img {
+    width: 23px;
+}
+
+.right #listItem {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.right .item {
+    display: flex;
+    align-items: center;
+    margin: 0 3rem;
+    gap: 10px;
+    padding: 5px;
+    border: 1px solid white;
+    background-color: #15202b;
+}
+
+.right .item input[type="checkbox"] {
+    width: 5rem;
+    height: 1.5rem;
+}
+
+.right .item #text {
+    margin: 0 30px 0 10px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.right .star {
+    display: flex;
+    position: relative;
+    text-align: center;
+    align-items: center;
+}
+
+.right .star label{
+    color: white;
+    width: 30px;
+    height: 48px;
+}
+
+.right .star input {
+    display: none;
+}
+
+.right .star label:before {
+    content: "\2605";
+    font-size: 35px;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.right .star label:after {
+    content: "\2605";
+    font-size: 35px;
+    color: yellow;
+    display: inline-block;
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+}
+
+.right .star input:checked ~ label:after {
+    opacity: 1;
+}
+
+#vert {
+    font-size: 35px;
+    cursor: pointer;
+}
+
+.item #combo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.item .listOption {
+    display: none;
+}
+
+.item .listOption button {
+    color: white;
+    border: 1px solid white;
+    background:#192734;
+    font-size: 1rem;
+    padding: 5px;
+}
+
+.item .listOption.active {
+    display: flex;
+    flex-direction: column;
+    right: 0;
 }
 
 .footer {
