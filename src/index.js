@@ -70,7 +70,6 @@ prevNextIcon.forEach(icon => {
     })
 })
 
-
 //make default right panel is today
 const title = document.getElementById('title');
 title.innerHTML = new Date().toLocaleDateString('en-GB')
@@ -115,7 +114,9 @@ important.addEventListener('click', () => {
 });
 
 // click add task / add idea will remove the hidden class
+const listItem = document.getElementById('listTask')
 const formTask = document.getElementById("task")
+
 const buttonAddTask = document.getElementById("addTask")
 buttonAddTask.addEventListener('click', () => {
     formTask.classList.remove('hidden')
@@ -124,16 +125,6 @@ buttonAddTask.addEventListener('click', () => {
 const cancelTaskButton = document.querySelector('input[id="cancel"]')
 cancelTaskButton.addEventListener('click', () => {
     formTask.classList.add('hidden')
-})
-
-const formIdea = document.getElementById('idea')
-const buttonAddIdea = document.getElementById("addIdea")
-buttonAddIdea.addEventListener('click', () => {
-    formIdea.classList.remove('hidden')
-})
-const cancelIdeaButton = document.querySelector('input[id="idea"]')
-cancelIdeaButton.addEventListener('click', () => {
-    formIdea.classList.add('hidden')
 })
 
 function createEditForm() {
@@ -201,11 +192,8 @@ let newItem = (function newItem () {
 }())
 
 // Design a div to represent the task/idea div
-function createItem(title, describtion) {
+function createItem(listItem, task) {
 
-    const task = new Task(title, describtion)
-    
-    const listItem = document.getElementById('listItem')
     const item = newItem('div')
     const itemID = Number(item.id)
 
@@ -214,6 +202,8 @@ function createItem(title, describtion) {
     done.name = "done"
     done.setAttribute('id', 'done')
     item.appendChild(done)
+
+    done.defaultChecked = task.done == true ? true : false
 
     //make button done change status
     done.addEventListener('click', () => {
@@ -243,6 +233,8 @@ function createItem(title, describtion) {
     star.appendChild(starBox)
     star.appendChild(starLabel)
     combo.appendChild(star)
+
+    starBox.defaultChecked = task.important == true ? true : false
 
     starBox.addEventListener('click', () => {
         task.beImportant()
@@ -316,35 +308,31 @@ function createItem(title, describtion) {
     listItem.appendChild(item)
 }
 
-
 // Click Add will create a div + add object to localstorage
 formTask.addEventListener('submit', (e) => {
     e.preventDefault();
-    
-    let titleInput = document.getElementById('inputTitle')
+
+    let titleInput = document.getElementById('inputTitle') 
     let describtionInput = document.getElementById('details')
-    let task = new Task(titleInput.value, describtionInput.value)
+
+    const task = new Task(titleInput.value, describtionInput.value, false, false)
     task.addToLocalStorage()
-    createItem(titleInput.value, describtionInput.value)
-    
+
+    createItem(listItem, task)
+
     titleInput.value = ""
     describtionInput.value = ""
     formTask.classList.add("hidden")
 })
 
-// Object can be rename and delete and mark Important and mark it done
-
-//Create an array in localStorage
-const myTask = localStorage.setItem('myTask', "[]")
-const myIdea = localStorage.setItem('myIdea', "[]")
-//Push new Task/Idea 
+// const myIdea = localStorage.getItem('myIdea') == null ? localStorage.setItem('myIdea', "[]") : JSON.parse(localStorage.getItem('myIdea'))
 
 class Task {
-    constructor (title, describtion, done ,important) {
+    constructor (title, describtion, done, important) {
         this.title = title
         this.describtion = describtion
-        this.done = false
-        this.important = false
+        this.done = done
+        this.important = important
     }
 
     beDone() {
@@ -412,9 +400,132 @@ class Task {
         }
         localStorage.setItem('myTask', JSON.stringify(myTask))
     }
+}
 
-}   
+let myTask = localStorage.getItem('myTask')
+if (myTask == null ) {
+    localStorage.setItem('myTask', "[]")
+} else {
+    myTask = JSON.parse(localStorage.getItem('myTask'))
+    for (let i = 0; i < myTask.length; i++) {
+        let task = new Task(myTask[i].title, myTask[i].describtion, myTask[i].done, myTask[i].important)   
+        createItem(listItem, task)
+    }
+}
 
 
+class Idea {
+    constructor (title, describtion, done, important) {
+        this.title = title
+        this.describtion = describtion
+        this.done = done
+        this.important = important
+    }
 
+    beDone() {
+        let myIdea = JSON.parse(localStorage.getItem('myIdea'))
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        for (let i = 0; i < myIdea.length; i++) {
+            if(JSON.stringify(myIdea[i]) === JSON.stringify(idea)) {
+                this.done = !this.done
+                myIdea[i].done = !myIdea[i].done
+            }
+        }
+        return localStorage.setItem('myIdea', JSON.stringify(myIdea))
+    }
 
+    beImportant() {
+        let myIdea = JSON.parse(localStorage.getItem('myIdea'))
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        for (let i = 0; i < myIdea.length; i++) {
+            if(JSON.stringify(myIdea[i]) === JSON.stringify(idea)) {
+                this.important = !this.important
+                myIdea[i].important = !myIdea[i].important
+            }
+        }
+        return localStorage.setItem('myIdea', JSON.stringify(myIdea))
+    }
+
+    reName(newName) {
+        let myIdea = JSON.parse(localStorage.getItem('myIdea'))
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        for (let i = 0; i < myIdea.length; i++) {
+            if(JSON.stringify(myIdea[i]) === JSON.stringify(idea)) {
+                this.title = newName
+                myIdea[i].title = newName
+            }
+        }
+        return localStorage.setItem('myIdea', JSON.stringify(myIdea))
+    }
+
+    reDes(newDes) {
+        let myIdea = JSON.parse(localStorage.getItem('myIdea'))
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        for (let i = 0; i < myIdea.length; i++) {
+            if(JSON.stringify(myIdea[i]) === JSON.stringify(idea)) {
+                this.describtion = newDes
+                myIdea[i].describtion = newDes
+            }
+        }
+        return localStorage.setItem('myTask', JSON.stringify(myIdea))
+    }
+
+    addToLocalStorage() {
+        let myIdea = JSON.parse(localStorage.getItem('myIdea'))
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        myIdea.push(idea)
+        localStorage.setItem('myIdea', JSON.stringify(myIdea))
+    }
+
+    deleteFromLocalStorage() {
+        let myIdea = JSON.parse(localStorage.getItem('myIdea'))
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        for (let i = 0; i < myIdea.length; i++) {
+            if(JSON.stringify(myIdea[i]) === JSON.stringify(idea)) {
+                myIdea.splice(i, 1)
+            }
+        }
+        localStorage.setItem('myIdea', JSON.stringify(myIdea))
+    }
+}
+
+const listIdea = document.getElementById('listIdea')
+
+let myIdea = localStorage.getItem('myIdea')
+if (myIdea == null ) {
+    localStorage.setItem('myIdea', "[]")
+} else {
+    myIdea = JSON.parse(localStorage.getItem('myIdea'))
+    for (let i = 0; i < myIdea.length; i++) {
+        let idea = new Idea(myIdea[i].title, myIdea[i].describtion, myIdea[i].done, myIdea[i].important)
+        createItem(listIdea, idea)
+    }
+}
+
+const formIdea = document.getElementById('idea')
+formIdea.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    let titleInput = document.getElementById('titleIdea') 
+    let describtionInput = document.getElementById('subIdea')
+    
+    const idea = new Idea(titleInput.value, describtionInput.value, false, false)
+    console.log(idea)
+    idea.addToLocalStorage()
+
+    createItem(listIdea, idea)
+
+    titleInput.value = ''
+    describtionInput.value = ''
+    formIdea.classList.add('hidden')
+})
+
+const buttonAddIdea = document.getElementById("addIdea")
+buttonAddIdea.addEventListener('click', () => {
+    formIdea.classList.remove('hidden')
+})
+
+const cancelIdeaButton = document.querySelector('input[id="idea"]')
+cancelIdeaButton.addEventListener('click', () => {
+    formIdea.classList.add('hidden')
+})
