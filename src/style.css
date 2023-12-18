@@ -171,15 +171,15 @@ header .icons span:last-child{
 
 .right h2 {
     margin: 2rem 3rem;
-    padding: 15px;
-    font-size: 1.5rem;
+    padding: 25px;
+    font-size: 2rem;
     background-color: rgba(31, 141, 77, 1);
     border-radius: 0.5rem;
 }
 
 .right #panel {
     display: grid;
-    grid-template-columns: 40vw 40vw;
+    grid-template-columns: repeat(auto-fit, minmax(40vw, 1fr));
     height: 80vh;
 }
 
@@ -236,7 +236,7 @@ header .icons span:last-child{
     margin: 2rem 3rem;
     padding: 5px;
     gap: 1rem;
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 600;
     width: 33vw;
 }
@@ -246,7 +246,7 @@ header .icons span:last-child{
 }
 
 .right .add button img {
-    width: 23px;
+    width: 33px;
 }
 
 .right #listTask {
