@@ -1,8 +1,9 @@
-import { Task, Idea } from "."
+import { Task, Idea } from ".."
 //Create Form
 function createForm(type) {
     const content = document.createElement('div')
     content.classList = 'form'
+    content.id = `this${type}`
 
     const form = document.createElement('form')
     form.id = `${type}`
@@ -150,19 +151,20 @@ function createRightPanel() {
     return content
 }
 
-function createItem(listItem, task) {
+let newItem = (function newItem () {
+    const baseID = 'item'
+    let count = 0
+    return function (type = 'div') {
+        let item = document.createElement(type)
+        item.classList = baseID
+        item.id = count
+        count += 1
+        return item
+    }
+}())
 
-    let newItem = (function newItem () {
-        const baseID = 'item'
-        let count = 0
-        return function (type = 'div') {
-            let item = document.createElement(type)
-            item.classList = baseID
-            item.id = count
-            count += 1
-            return item
-        }
-    }())
+export function createItem(listItem, task) {
+
 
     const item = newItem('div')
     const itemID = Number(item.id)
@@ -248,7 +250,7 @@ function createItem(listItem, task) {
     //edit button should create another kind of form
     buttonEdit.addEventListener('click', () => {
         item.style.display = "none"
-        createEditForm()
+        createEditForm(listItem)
 
         const editForm = document.getElementById('editTask')
         const cancelButton = document.getElementById('editCancel')
@@ -273,13 +275,13 @@ function createItem(listItem, task) {
             item.style.display = null
             list.classList.remove('active')
         })
-        //what if they press cancel ? we need to restore the item 
     })
     listItem.appendChild(item)
 }
 
-function createEditForm() {
-    const place = document.querySelector('.form')
+function createEditForm(list) {
+
+    const place = list.id === 'listIdea' ? document.getElementById('thisidea') : document.getElementById('thistask')
     
     const form = document.createElement('form')
     form.id = "editTask"
@@ -337,7 +339,7 @@ function avaialbleTask(list) {
     } else {
         myTask = JSON.parse(localStorage.getItem('myTask'))
         for (let i = 0; i < myTask.length; i++) {
-            let task = new Task(myTask[i].title, myTask[i].describtion, myTask[i].done, myTask[i].important)   
+            let task = new Task(myTask[i].title, myTask[i].describtion, myTask[i].done, myTask[i].important, myTask[i].date)   
             createItem(list, task)
         }
     }
@@ -350,7 +352,7 @@ function availableIdea(list) {
     } else {
         myIdea = JSON.parse(localStorage.getItem('myIdea'))
         for (let i = 0; i < myIdea.length; i++) {
-            let idea = new Idea(myIdea[i].title, myIdea[i].describtion, myIdea[i].done, myIdea[i].important)
+            let idea = new Idea(myIdea[i].title, myIdea[i].describtion, myIdea[i].done, myIdea[i].important, myIdea[i].date)
             createItem(list, idea)
         }   
     }

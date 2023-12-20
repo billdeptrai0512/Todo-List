@@ -1,9 +1,9 @@
-import _, { create, now } from 'lodash';
 import './style.css';
-import { showAllTask } from './alltask';
-import { showAllIdea } from './allIdea';
-import { showImportant } from './important';
-import { addToday } from './today';
+import { showAllTask } from './page/alltask';
+import { showAllIdea } from './page/allIdea';
+import { showImportant } from './page/important';
+import { addToday } from './page/today';
+import { showDate } from './page/date';
 
 // make the left panel disappear and appear
 const leftPanel = document.querySelector('.left');
@@ -16,7 +16,6 @@ menuButton.addEventListener('click', () => {
         leftPanel.classList.remove('hidden')
     }
 })
-
 // make the calender in the bottom of left panel
 const currentDate = document.querySelector('.current-date');
 const dateTag = document.querySelector('.days');
@@ -25,6 +24,8 @@ const prevNextIcon = document.querySelectorAll('.icons span')
 let date = new Date(),
 currYear = date.getFullYear(),
 currMonth = date.getMonth();
+
+let now = new Date().toLocaleDateString('en-GB')
 
 const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
                 'August', 'September', 'October', 'November', 'December']
@@ -47,11 +48,66 @@ const renderCalendar = () => {
     }
 
     for ( let i = lastDayofMonth; i < 6; i++) {
-        liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`
+        liTag += `<li id="last" class="inactive">${i - lastDayofMonth + 1}</li>`
     }
 
     currentDate.innerHTML = `${month[currMonth]} ${currYear}`
     dateTag.innerHTML = liTag
+    //--------------------------------
+    const wholeMonth = document.querySelector('.days').children
+    let everyDay = []
+    for (let i = 0 ; i < wholeMonth.length ; i++) {
+        everyDay.push(wholeMonth[i])
+    }
+    
+    everyDay.forEach((date) => {
+        date.addEventListener('click', () => {
+            let timing
+            if(date.classList == 'inactive' && date.id == 'last') {
+                timing = `${date.innerHTML}/${currMonth + 2}/${currYear}`
+            } else if (date.classList == 'inactive' && !date.id) {
+                timing = `${date.innerHTML}/${currMonth}/${currYear}`
+            } else {
+                timing = `${date.innerHTML}/${currMonth + 1}/${currYear}`
+            }
+            //------------
+            
+            if(timing == now) {
+                rightBody.innerHTML = ''
+
+                const todayTitle = document.createElement('h2')
+                todayTitle.id = 'title'
+                todayTitle.innerHTML = 'Today'
+
+                rightBody.appendChild(todayTitle)
+
+                rightBody.appendChild(addToday())
+
+                today.classList.add("active")
+                allTask.classList.remove("active")
+                allIdea.classList.remove("active")
+                important.classList.remove("active")
+            } else {
+                rightBody.innerHTML = ''
+
+                const todayTitle = document.createElement('h2')
+                todayTitle.id = 'title'
+                todayTitle.innerHTML = timing
+
+                rightBody.appendChild(todayTitle)
+
+                rightBody.appendChild(showDate(timing))
+
+                today.classList.remove("active")
+                allTask.classList.remove("active")
+                allIdea.classList.remove("active")
+                important.classList.remove("active")
+            }
+
+        })
+        
+    })
+
 }
 
 renderCalendar();
@@ -72,16 +128,17 @@ prevNextIcon.forEach(icon => {
 })
 
 export class Task {
-    constructor (title, describtion, done, important) {
+    constructor (title, describtion, done, important, date) {
         this.title = title
         this.describtion = describtion
         this.done = done
         this.important = important
+        this.date = date == null ? now : date
     }
 
     beDone() {
         let myTask = JSON.parse(localStorage.getItem('myTask'))
-        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date}
         for (let i = 0; i < myTask.length; i++) {
             if(JSON.stringify(myTask[i]) === JSON.stringify(task)) {
                 this.done = !this.done
@@ -93,7 +150,7 @@ export class Task {
 
     beImportant() {
         let myTask = JSON.parse(localStorage.getItem('myTask'))
-        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date}
         for (let i = 0; i < myTask.length; i++) {
             if(JSON.stringify(myTask[i]) === JSON.stringify(task)) {
                 this.important = !this.important
@@ -105,7 +162,7 @@ export class Task {
 
     reName(newName) {
         let myTask = JSON.parse(localStorage.getItem('myTask'))
-        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date}
         for (let i = 0; i < myTask.length; i++) {
             if(JSON.stringify(myTask[i]) === JSON.stringify(task)) {
                 this.title = newName
@@ -117,7 +174,7 @@ export class Task {
 
     reDes(newDes) {
         let myTask = JSON.parse(localStorage.getItem('myTask'))
-        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date}
         for (let i = 0; i < myTask.length; i++) {
             if(JSON.stringify(myTask[i]) === JSON.stringify(task)) {
                 this.describtion = newDes
@@ -129,14 +186,14 @@ export class Task {
 
     addToLocalStorage() {
         let myTask = JSON.parse(localStorage.getItem('myTask'))
-        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date}
         myTask.push(task)
         localStorage.setItem('myTask', JSON.stringify(myTask))
     }
 
     deleteFromLocalStorage() {
         let myTask = JSON.parse(localStorage.getItem('myTask'))
-        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let task = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date}
         for (let i = 0; i < myTask.length; i++) {
             if(JSON.stringify(myTask[i]) === JSON.stringify(task)) {
                 myTask.splice(i, 1)
@@ -147,16 +204,17 @@ export class Task {
 }
 
 export class Idea {
-    constructor (title, describtion, done, important) {
+    constructor (title, describtion, done, important, date) {
         this.title = title
         this.describtion = describtion
         this.done = done
         this.important = important
+        this.date = date == null ? now : date
     }
 
     beDone() {
         let myIdea = JSON.parse(localStorage.getItem('myIdea'))
-        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date }
         for (let i = 0; i < myIdea.length; i++) {
             if(JSON.stringify(myIdea[i]) === JSON.stringify(idea)) {
                 this.done = !this.done
@@ -168,7 +226,7 @@ export class Idea {
 
     beImportant() {
         let myIdea = JSON.parse(localStorage.getItem('myIdea'))
-        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date }
         for (let i = 0; i < myIdea.length; i++) {
             if(JSON.stringify(myIdea[i]) === JSON.stringify(idea)) {
                 this.important = !this.important
@@ -180,7 +238,7 @@ export class Idea {
 
     reName(newName) {
         let myIdea = JSON.parse(localStorage.getItem('myIdea'))
-        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date}
         for (let i = 0; i < myIdea.length; i++) {
             if(JSON.stringify(myIdea[i]) === JSON.stringify(idea)) {
                 this.title = newName
@@ -192,26 +250,26 @@ export class Idea {
 
     reDes(newDes) {
         let myIdea = JSON.parse(localStorage.getItem('myIdea'))
-        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date}
         for (let i = 0; i < myIdea.length; i++) {
             if(JSON.stringify(myIdea[i]) === JSON.stringify(idea)) {
                 this.describtion = newDes
                 myIdea[i].describtion = newDes
             }
         }
-        return localStorage.setItem('myTask', JSON.stringify(myIdea))
+        return localStorage.setItem('myIdea', JSON.stringify(myIdea))
     }
 
     addToLocalStorage() {
         let myIdea = JSON.parse(localStorage.getItem('myIdea'))
-        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date}
         myIdea.push(idea)
         localStorage.setItem('myIdea', JSON.stringify(myIdea))
     }
 
     deleteFromLocalStorage() {
         let myIdea = JSON.parse(localStorage.getItem('myIdea'))
-        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important}
+        let idea = {'title': this.title, 'describtion': this.describtion, 'done': this.done, 'important': this.important, 'date': this.date}
         for (let i = 0; i < myIdea.length; i++) {
             if(JSON.stringify(myIdea[i]) === JSON.stringify(idea)) {
                 myIdea.splice(i, 1)
@@ -254,7 +312,17 @@ today.addEventListener('click', () => {
 // add eventlistener to create new right panel
 const allTask = document.getElementById('Task');
 allTask.addEventListener('click',  () => {
-    showAllTask()
+
+    rightBody.innerHTML = ''
+
+    const todayTitle = document.createElement('h2')
+    todayTitle.id = 'title'
+    todayTitle.innerHTML = 'All Task'
+
+    rightBody.appendChild(todayTitle)
+
+    rightBody.appendChild(showAllTask())
+
     today.classList.remove("active")
     allTask.classList.add("active")
     allIdea.classList.remove("active")
@@ -263,7 +331,16 @@ allTask.addEventListener('click',  () => {
 
 const allIdea = document.getElementById('Idea');
 allIdea.addEventListener('click', () => {
-    showAllIdea();
+
+    rightBody.innerHTML = ''
+
+    const todayTitle = document.createElement('h2')
+    todayTitle.id = 'title'
+    todayTitle.innerHTML = 'All Idea'
+
+    rightBody.appendChild(todayTitle)
+
+    rightBody.appendChild(showAllIdea())
     today.classList.remove("active")
     allTask.classList.remove("active")
     allIdea.classList.add("active")
@@ -272,12 +349,20 @@ allIdea.addEventListener('click', () => {
 
 const important = document.getElementById('Important');
 important.addEventListener('click', () => {
-    showImportant();
+
+    rightBody.innerHTML = ''
+
+    const todayTitle = document.createElement('h2')
+    todayTitle.id = 'title'
+    todayTitle.innerHTML = 'Important'
+
+    rightBody.appendChild(todayTitle)
+
+    rightBody.appendChild(showImportant())
+
     today.classList.remove("active")
     allTask.classList.remove("active")
     allIdea.classList.remove("active")
     important.classList.add("active")
 });
-
-
 
