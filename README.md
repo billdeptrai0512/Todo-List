@@ -13,7 +13,6 @@ There are 4 task :
 - All Task: Show all task that haven't finished
 - All Idea: Show all idea that haven't finished
 - Important: Show all task/idea that haven't finished but Important
------------------------------
-The schedule below allow user to check history of any Date
+The schedule allow user to check Task/Date of any Date in the past
 
 
