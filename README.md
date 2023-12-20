@@ -14,6 +14,6 @@ There are 4 task :
 - All Idea: Show all idea that haven't finished
 - Important: Show all task/idea that haven't finished but Important
 
-The schedule allow user to check Task/Date of any Date in the past
+The schedule allow user to check Task/Idea of any Date in the past
 
 
