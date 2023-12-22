@@ -81,7 +81,7 @@ const renderCalendar = () => {
 
                 rightBody.appendChild(todayTitle)
 
-                rightBody.appendChild(addToday())
+                rightBody.appendChild(addToday(timing))
 
                 today.classList.add("active")
                 allTask.classList.remove("active")
