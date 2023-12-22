@@ -931,7 +931,7 @@ const renderCalendar = () => {
 
                 rightBody.appendChild(todayTitle)
 
-                rightBody.appendChild((0,_page_today__WEBPACK_IMPORTED_MODULE_4__.addToday)(now))
+                rightBody.appendChild((0,_page_today__WEBPACK_IMPORTED_MODULE_4__.addToday)(timing))
 
                 today.classList.add("active")
                 allTask.classList.remove("active")
