@@ -1139,7 +1139,7 @@ todayTitle.id = 'title'
 todayTitle.innerHTML = 'Today'
 
 rightBody.appendChild(todayTitle)
-rightBody.appendChild((0,_page_today__WEBPACK_IMPORTED_MODULE_4__.addToday)())
+rightBody.appendChild((0,_page_today__WEBPACK_IMPORTED_MODULE_4__.addToday)(now))
 
 today.addEventListener('click', () => {
 
