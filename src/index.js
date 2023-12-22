@@ -301,7 +301,7 @@ today.addEventListener('click', () => {
 
     rightBody.appendChild(todayTitle)
 
-    rightBody.appendChild(addToday())
+    rightBody.appendChild(addToday(now))
 
     today.classList.add("active")
     allTask.classList.remove("active")

@@ -81,7 +81,7 @@ function createAdd(type) {
     return content
 }
 
-function createLeftPanel() {
+function createLeftPanel(timing) {
     const content = document.createElement('div')
     content.id = 'left-panel'
 
@@ -107,7 +107,7 @@ function createLeftPanel() {
     const listTask = document.createElement('div')
     listTask.id = 'listTask' 
 
-    avaialbleTask(listTask)
+    avaialbleTask(listTask, timing)
     content.appendChild(listTask)
 
     const addButton = createAdd('task')
@@ -116,7 +116,7 @@ function createLeftPanel() {
     return content
 }
 
-function createRightPanel() {
+function createRightPanel(timing) {
     const content = document.createElement('div')
     content.id = 'right-panel'
 
@@ -142,7 +142,7 @@ function createRightPanel() {
     const listIdea = document.createElement('div')
     listIdea.id = 'listIdea' 
 
-    availableIdea(listIdea)
+    availableIdea(listIdea, timing)
     content.appendChild(listIdea)
 
     const addButton = createAdd('idea')
@@ -332,20 +332,22 @@ function createEditForm(list) {
     place.appendChild(form)
 }
 
-function avaialbleTask(list) {
+function avaialbleTask(list, timing) {
     let myTask = localStorage.getItem('myTask')
     if (myTask == null ) {
         localStorage.setItem('myTask', "[]")
     } else {
         myTask = JSON.parse(localStorage.getItem('myTask'))
         for (let i = 0; i < myTask.length; i++) {
-            let task = new Task(myTask[i].title, myTask[i].describtion, myTask[i].done, myTask[i].important, myTask[i].date)   
-            createItem(list, task)
+            let task = new Task(myTask[i].title, myTask[i].describtion, myTask[i].done, myTask[i].important, myTask[i].date)  
+            if(task.date == timing) {
+                createItem(list, task)
+            }
         }
     }
 }
 
-function availableIdea(list) {
+function availableIdea(list, timing) {
     let myIdea = localStorage.getItem('myIdea')
     if (myIdea == null ) {
         localStorage.setItem('myIdea', "[]")
@@ -353,20 +355,22 @@ function availableIdea(list) {
         myIdea = JSON.parse(localStorage.getItem('myIdea'))
         for (let i = 0; i < myIdea.length; i++) {
             let idea = new Idea(myIdea[i].title, myIdea[i].describtion, myIdea[i].done, myIdea[i].important, myIdea[i].date)
-            createItem(list, idea)
+            if(idea.date == timing) {
+                createItem(list, idea)
+            }
         }   
     }
 }
 
 
-export function addToday(type) {
+export function addToday(timing) {
     const content = document.createElement('div')
     content.id = 'panel'
 
-    const left = createLeftPanel()
+    const left = createLeftPanel(timing)
     content.appendChild(left)
 
-    const right = createRightPanel()
+    const right = createRightPanel(timing)
     content.appendChild(right)
 
     return content
